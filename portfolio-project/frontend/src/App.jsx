@@ -251,6 +251,8 @@ function Navbar() {
 /* ------------------------------------------------------------------ */
 
 function Hero() {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <section id="hero" className="relative pt-32 pb-20 px-6 max-w-6xl mx-auto min-h-screen flex items-center">
       <div className="absolute top-24 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-br from-indigo-600/20 via-violet-600/10 to-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
@@ -267,9 +269,30 @@ function Hero() {
             Open to Software Engineering & Data roles
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-zinc-50 leading-[1.05]">
-            Yushan Sadeepa
-          </h1>
+          {/* Avatar + Name row */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 blur-md opacity-40" />
+              <div className="relative w-full h-full rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400">
+                {!imgError ? (
+                  <img
+                    src="/profile.png"
+                    alt="Yushan Sadeepa"
+                    onError={() => setImgError(true)}
+                    className="w-full h-full rounded-full object-cover bg-zinc-900"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-2xl font-semibold text-zinc-300">
+                    YS
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-zinc-50 leading-[1.05]">
+              Yushan Sadeepa
+            </h1>
+          </div>
 
           <p className="mt-4 text-lg sm:text-xl bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-300 bg-clip-text text-transparent font-medium">
             Computer Science & Technology Undergraduate
