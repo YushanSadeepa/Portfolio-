@@ -84,6 +84,47 @@ portfolio-project/
         └── index.css
 ```
 
+## Adding your profile photo
+
+The hero section shows a circular profile photo with a gradient ring.
+Drop your image into `frontend/public/` and name it `profile.jpg`
+(or edit the `src="/profile.jpg"` in `src/App.jsx` to match a different
+filename/extension). A square image, at least 400x400px, crops best.
+If no image is found, it automatically falls back to a "YS" initials
+avatar, so the layout never breaks.
+
+## Project cover images, demos & tech logos
+
+Each project card now shows:
+- A **cover image** at the top of the card (falls back to a neutral
+  placeholder icon if the file is missing).
+- A **"Watch Demo" button** (only appears if the project has a `demo`
+  field) that opens a modal playing a video, GIF, or embedded iframe.
+- **Real brand logos** next to each tech-stack tag (via `react-icons/si`),
+  instead of plain text.
+
+To add your own media, drop files into `frontend/public/projects/` using
+the filenames referenced in the `PROJECTS` array in `src/App.jsx` — see
+`frontend/public/projects/README.txt` for the exact expected names, or
+edit the `cover` / `demo` fields in `App.jsx` to point at whatever
+filenames you use.
+
+To add a tech-stack logo for a tool not already mapped, import its icon
+from `react-icons/si` (browse available icons at
+https://react-icons.github.io/react-icons/icons/si/) and add an entry to
+`TECH_ICON_MAP` in `src/App.jsx`:
+
+```js
+import { SiTailwindcss } from "react-icons/si";
+// ...
+const TECH_ICON_MAP = {
+  // ...existing entries
+  "Tailwind CSS": { icon: SiTailwindcss, color: "#06B6D4" },
+};
+```
+
+Then just add `"Tailwind CSS"` to that project's `tech` array.
+
 ## Notes before deploying
 
 - CORS in `backend/server.js` is currently locked to

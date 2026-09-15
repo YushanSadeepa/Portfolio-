@@ -1,0 +1,6 @@
+Add your profile photo to this folder and name it "profile.jpg"
+(or update the src="/profile.jpg" path in src/App.jsx to match
+your filename, e.g. profile.png).
+
+Recommended: a square image, at least 400x400px, so it crops
+cleanly into the circular avatar.

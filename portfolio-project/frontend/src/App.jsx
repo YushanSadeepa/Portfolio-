@@ -24,10 +24,41 @@ import {
   BookOpen,
   Loader2,
   AlertCircle,
+  Play,
+  Maximize2,
+  ImageOff,
+  Target,
+  MessageCircle,
+  BarChart3,
 } from "lucide-react";
+import {
+  SiReact,
+  SiNodedotjs,
+  SiMongodb,
+  SiSocketdotio,
+  SiHtml5,
+  SiPhp,
+  SiMysql,
+  SiCss,
+  SiJavascript,
+  SiDotnet,
+  SiPython,
+  SiCplusplus,
+  SiScikitlearn,
+  SiPandas,
+  SiNumpy,
+  SiGit,
+  SiGithub,
+  SiPostman,
+  SiJira,
+  SiTrello,
+} from "react-icons/si";
+
+import { TbBrandCSharp, TbSql, TbBrandVscode } from "react-icons/tb";
+import { DiMsqlServer, DiJava } from "react-icons/di";
 
 /* ------------------------------------------------------------------ */
-/*  CONFIG                                                             */
+/* CONFIG                                                             */
 /* ------------------------------------------------------------------ */
 
 const API_URL = "http://localhost:5000/api/contact";
@@ -56,6 +87,8 @@ const PROJECTS = [
     tech: ["React", "Node.js", "MongoDB", "Socket.io"],
     highlights: ["Real-time bidding over WebSockets", "Direct buyer-seller connection"],
     size: "lg",
+    cover: "/projects/cinnaxchange-cover.jpg",
+    demo: { type: "video", src: "/projects/cinnaxchange-demo.mp4" },
   },
   {
     id: "susl-connect",
@@ -67,6 +100,8 @@ const PROJECTS = [
     tech: ["HTML", "PHP", "MySQL", "CSS", "JavaScript"],
     highlights: ["Local vendor management", "Student-tailored ordering system"],
     size: "md",
+    cover: "/projects/susl-connect-cover.jpg",
+    demo: { type: "gif", src: "/projects/susl-connect-demo.gif" },
   },
   {
     id: "budget-manager",
@@ -78,10 +113,55 @@ const PROJECTS = [
     tech: ["C#", ".NET", "SQL Server"],
     highlights: ["Expense tracking & categorization", "Visual financial reports"],
     size: "md",
+    cover: "/projects/budget-manager-cover.jpg",
+    demo: { type: "video", src: "/projects/budget-manager-demo.mp4" },
   },
 ];
 
 const FILTERS = ["All", "Full-Stack Platform", "Web Platform", "Desktop Application"];
+
+const TECH_ICON_MAP = {
+  "React": { icon: SiReact, color: "#61DAFB" },
+  "Node.js": { icon: SiNodedotjs, color: "#5FA04E" },
+  "MongoDB": { icon: SiMongodb, color: "#47A248" },
+  "Socket.io": { icon: SiSocketdotio, color: "#FFFFFF" },
+  "HTML": { icon: SiHtml5, color: "#E34F26" },
+  "PHP": { icon: SiPhp, color: "#777BB4" },
+  "MySQL": { icon: SiMysql, color: "#4479A1" },
+  "CSS": { icon: SiCss, color: "#1572B6" },
+  "JavaScript": { icon: SiJavascript, color: "#F7DF1E" },
+  "C#": { icon: TbBrandCSharp, color: "#9B4F96" },
+  ".NET": { icon: SiDotnet, color: "#512BD4" },
+  "SQL Server": { icon: DiMsqlServer, color: "#CC2927" },
+};
+
+const SKILL_ICON_MAP = {
+  ...TECH_ICON_MAP,
+  // Languages
+  "Python": { icon: SiPython, color: "#3776AB" },
+  "Java": { icon: DiJava, color: "#F89820" },
+  "C++": { icon: SiCplusplus, color: "#00599C" },
+  "SQL": { icon: TbSql, color: "#4479A1" },
+  // Machine Learning & Data Science
+  "Scikit-learn": { icon: SiScikitlearn, color: "#F7931E" },
+  "Pandas": { icon: SiPandas, color: "#150458" },
+  "NumPy": { icon: SiNumpy, color: "#4DABCF" },
+  "Data Analysis": { icon: BarChart3 },
+  // Web Development
+  "React.js": { icon: SiReact, color: "#61DAFB" },
+  // Tools & Frameworks
+  "Git": { icon: SiGit, color: "#F05032" },
+  "GitHub": { icon: SiGithub, color: "#FFFFFF" },
+  "VS Code": { icon: TbBrandVscode, color: "#007ACC" },
+  "Postman": { icon: SiPostman, color: "#FF6C37" },
+  "Jira": { icon: SiJira, color: "#0052CC" },
+  "Trello": { icon: SiTrello, color: "#0052CC" },
+  // Soft Skills
+  "Critical Thinking": { icon: Brain },
+  "Project Planning & Execution": { icon: Target },
+  "Team Collaboration": { icon: Users },
+  "Communication": { icon: MessageCircle },
+};
 
 const SKILL_CATEGORIES = [
   { id: "languages", label: "Languages", icon: Code2, items: ["Python", "Java", "JavaScript", "C#", "C++", "SQL"] },
@@ -113,7 +193,7 @@ const EMAIL = "yushanaththanayake@gmail.com";
 const PHONES = ["+94 76 772 5450", "+94 70 155 4291"];
 
 /* ------------------------------------------------------------------ */
-/*  HELPERS                                                            */
+/* HELPERS                                                            */
 /* ------------------------------------------------------------------ */
 
 function scrollToId(id) {
@@ -156,7 +236,7 @@ function GlowCard({ children, className = "", delay = 0 }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  NAVBAR                                                             */
+/* NAVBAR                                                             */
 /* ------------------------------------------------------------------ */
 
 function Navbar() {
@@ -247,7 +327,7 @@ function Navbar() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  HERO                                                               */
+/* HERO                                                               */
 /* ------------------------------------------------------------------ */
 
 function Hero() {
@@ -269,14 +349,13 @@ function Hero() {
             Open to Software Engineering & Data roles
           </div>
 
-          {/* Avatar + Name row */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
             <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 blur-md opacity-40" />
               <div className="relative w-full h-full rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400">
                 {!imgError ? (
                   <img
-                    src="/profile.png"
+                    src="/profile.jpg"
                     alt="Yushan Sadeepa"
                     onError={() => setImgError(true)}
                     className="w-full h-full rounded-full object-cover bg-zinc-900"
@@ -362,7 +441,7 @@ function Hero() {
           >
             <MapPin className="text-violet-400 mb-3" size={22} />
             <p className="text-sm text-zinc-500 mb-1">Based in</p>
-            <p className="text-zinc-100 font-medium">Matara, Sri Lanka</p>
+            <p className="text-zinc-100 font-medium">Western Province, Sri Lanka</p>
           </motion.div>
         </div>
       </div>
@@ -371,14 +450,14 @@ function Hero() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  ABOUT                                                              */
+/* ABOUT                                                              */
 /* ------------------------------------------------------------------ */
 
 function About() {
   const stats = [
     { label: "Focus areas", value: "ML, Data & SWE" },
     { label: "Degree progress", value: "Year 3, ongoing" },
-    { label: "Home base", value: "Matara, LK" },
+    { label: "Home base", value: "Sri Lanka" },
   ];
 
   return (
@@ -407,7 +486,7 @@ function About() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  EDUCATION                                                          */
+/* EDUCATION                                                          */
 /* ------------------------------------------------------------------ */
 
 function Education() {
@@ -456,12 +535,29 @@ function Education() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  SKILLS                                                             */
+/* SKILLS                                                             */
 /* ------------------------------------------------------------------ */
+
+function SkillChip({ label }) {
+  const entry = SKILL_ICON_MAP[label];
+  const Icon = entry?.icon;
+  return (
+    <span className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-950/60 text-zinc-300 hover:border-violet-500/40 hover:text-zinc-100 transition-colors">
+      {Icon ? (
+        <Icon
+          size={16}
+          className={entry.color ? "shrink-0" : "shrink-0 text-zinc-400"}
+          style={entry.color ? { color: entry.color } : undefined}
+        />
+      ) : null}
+      {label}
+    </span>
+  );
+}
 
 function Skills() {
   const [active, setActive] = useState(SKILL_CATEGORIES[0].id);
-  const current = SKILL_CATEGORIES.find((c) => c.id === active);
+  const current = SKILL_CATEGORIES.find((c) => c.id === active) || SKILL_CATEGORIES[0];
 
   return (
     <section id="skills" className="py-24 px-6 max-w-6xl mx-auto">
@@ -506,12 +602,7 @@ function Skills() {
             className="flex flex-wrap gap-3"
           >
             {current.items.map((item) => (
-              <span
-                key={item}
-                className="text-sm px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-950/60 text-zinc-300 hover:border-violet-500/40 hover:text-zinc-100 transition-colors"
-              >
-                {item}
-              </span>
+              <SkillChip key={item} label={item} />
             ))}
           </motion.div>
         </AnimatePresence>
@@ -521,46 +612,171 @@ function Skills() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  PROJECTS                                                           */
+/* PROJECTS                                                           */
 /* ------------------------------------------------------------------ */
 
-function ProjectCard({ project }) {
+function TechBadge({ label }) {
+  const entry = TECH_ICON_MAP[label];
+  const Icon = entry?.icon;
   return (
-    <GlowCard className={"p-7 flex flex-col " + (project.size === "lg" ? "md:col-span-2" : "")}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-xl font-semibold text-zinc-50">{project.title}</h3>
-          <p className="text-sm text-zinc-500 mt-1">{project.subtitle}</p>
-        </div>
-        <span className="text-xs shrink-0 px-2.5 py-1 rounded-full border border-zinc-700 text-zinc-400">
+    <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md bg-zinc-950/70 border border-zinc-800 text-zinc-300">
+      {Icon ? <Icon size={13} style={{ color: entry.color }} /> : null}
+      {label}
+    </span>
+  );
+}
+
+function CoverImage({ src, alt }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed || !src) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-zinc-950/60 text-zinc-700">
+        <ImageOff size={28} />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setFailed(true)}
+      className="w-full h-full object-cover"
+      loading="lazy"
+    />
+  );
+}
+
+function ProjectCard({ project, onOpenDemo }) {
+  return (
+    <GlowCard className={"overflow-hidden flex flex-col " + (project.size === "lg" ? "md:col-span-2" : "")}>
+      <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-zinc-950">
+        <CoverImage src={project.cover} alt={`${project.title} cover`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/10 to-transparent" />
+        <span className="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-full bg-zinc-950/80 border border-zinc-700 text-zinc-300 backdrop-blur-sm">
           {project.category}
         </span>
+
+        {project.demo && (
+          <button
+            onClick={() => onOpenDemo(project)}
+            className="absolute bottom-3 left-3 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-950/80 border border-zinc-700 text-zinc-100 backdrop-blur-sm hover:border-violet-500/60 hover:bg-zinc-900 transition-colors"
+          >
+            <Play size={13} className="text-violet-400" fill="currentColor" />
+            Watch Demo
+          </button>
+        )}
       </div>
 
-      <p className="mt-4 text-sm text-zinc-400 leading-relaxed">{project.description}</p>
+      <div className="p-7 flex flex-col flex-1">
+        <h3 className="text-xl font-semibold text-zinc-50">{project.title}</h3>
+        <p className="text-sm text-zinc-500 mt-1">{project.subtitle}</p>
 
-      <ul className="mt-4 space-y-2">
-        {project.highlights.map((h) => (
-          <li key={h} className="flex items-start gap-2 text-sm text-zinc-400">
-            <ArrowUpRight size={14} className="mt-0.5 text-cyan-400 shrink-0" />
-            {h}
-          </li>
-        ))}
-      </ul>
+        <p className="mt-4 text-sm text-zinc-400 leading-relaxed">{project.description}</p>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        {project.tech.map((t) => (
-          <span key={t} className="text-xs px-2.5 py-1 rounded-md bg-zinc-950/70 border border-zinc-800 text-zinc-400">
-            {t}
-          </span>
-        ))}
+        <ul className="mt-4 space-y-2">
+          {project.highlights.map((h) => (
+            <li key={h} className="flex items-start gap-2 text-sm text-zinc-400">
+              <ArrowUpRight size={14} className="mt-0.5 text-cyan-400 shrink-0" />
+              {h}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.tech.map((t) => (
+            <TechBadge key={t} label={t} />
+          ))}
+        </div>
       </div>
     </GlowCard>
   );
 }
 
+function DemoModal({ project, onClose }) {
+  useEffect(() => {
+    // Bug fix: this effect used to run unconditionally on every mount,
+    // locking document scrolling (overflow: hidden) even when no demo
+    // was open — that was the cause of the whole page feeling frozen.
+    if (!project) return;
+
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [project, onClose]);
+
+  return (
+    <AnimatePresence>
+      {project && (
+        <motion.div
+          key="demo-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden"
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
+              <h4 className="text-sm font-medium text-zinc-200 flex items-center gap-2">
+                <Maximize2 size={14} className="text-violet-400" />
+                {project.title} &mdash; Demo
+              </h4>
+              <button
+                onClick={onClose}
+                aria-label="Close demo"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="aspect-video bg-black flex items-center justify-center">
+              {project.demo?.type === "video" && (
+                <video
+                  src={project.demo.src}
+                  controls
+                  autoPlay
+                  muted
+                  playsInline
+                  loop
+                  className="w-full h-full object-contain"
+                />
+              )}
+              {project.demo?.type === "gif" && (
+                <img src={project.demo.src} alt={`${project.title} demo`} className="w-full h-full object-contain" />
+              )}
+              {project.demo?.type === "iframe" && (
+                <iframe
+                  src={project.demo.src}
+                  title={`${project.title} interactive demo`}
+                  className="w-full h-full"
+                  allow="fullscreen"
+                />
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function Projects() {
   const [filter, setFilter] = useState("All");
+  const [activeProject, setActiveProject] = useState(null);
   const visible = filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
 
   return (
@@ -600,17 +816,19 @@ function Projects() {
               transition={{ duration: 0.3 }}
               className={project.size === "lg" ? "md:col-span-2" : ""}
             >
-              <ProjectCard project={project} />
+              <ProjectCard project={project} onOpenDemo={setActiveProject} />
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
+
+      <DemoModal project={activeProject} onClose={() => setActiveProject(null)} />
     </section>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  CONTACT (wired to backend)                                        */
+/* CONTACT                                                            */
 /* ------------------------------------------------------------------ */
 
 function CopyRow({ icon: Icon, label, value, copyValue }) {
@@ -622,7 +840,7 @@ function CopyRow({ icon: Icon, label, value, copyValue }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch (e) {
-      /* clipboard unavailable, fail silently */
+      /* clipboard unavailable */
     }
   };
 
@@ -645,9 +863,8 @@ function CopyRow({ icon: Icon, label, value, copyValue }) {
   );
 }
 
-function Contact() {
+export default function App() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  // status: idle | sending | success | error
   const [status, setStatus] = useState("idle");
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -681,165 +898,131 @@ function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 px-6 max-w-6xl mx-auto">
-      <SectionHeading
-        eyebrow="Contact"
-        title="Let's talk"
-        description="Have a role, project, or idea in mind? Send a message or reach out directly."
-      />
-
-      <div className="grid md:grid-cols-5 gap-5">
-        <GlowCard className="md:col-span-3 p-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-zinc-500 mb-1.5 block">Name</label>
-                <input
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Your name"
-                  className="w-full rounded-lg bg-zinc-950/60 border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-zinc-500 mb-1.5 block">Email</label>
-                <input
-                  required
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="you@example.com"
-                  className="w-full rounded-lg bg-zinc-950/60 border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="text-xs text-zinc-500 mb-1.5 block">Message</label>
-              <textarea
-                required
-                rows={5}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                placeholder="What would you like to talk about?"
-                className="w-full rounded-lg bg-zinc-950/60 border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors resize-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:from-indigo-400 hover:to-violet-400 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {status === "sending" ? (
-                <>
-                  <Loader2 size={15} className="animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Send size={15} />
-                  Send Message
-                </>
-              )}
-            </button>
-
-            <AnimatePresence>
-              {status === "success" && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="flex items-center gap-2 text-sm text-emerald-400"
-                >
-                  <Check size={15} />
-                  {statusMessage}
-                </motion.p>
-              )}
-              {status === "error" && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="flex items-center gap-2 text-sm text-red-400"
-                >
-                  <AlertCircle size={15} />
-                  {statusMessage}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </form>
-        </GlowCard>
-
-        <div className="md:col-span-2 flex flex-col gap-3">
-          <CopyRow icon={Mail} label="Email" value={EMAIL} copyValue={EMAIL} />
-          <CopyRow icon={Phone} label="Phone" value={PHONES[0]} copyValue={PHONES[0]} />
-          <CopyRow icon={Phone} label="Phone (alt)" value={PHONES[1]} copyValue={PHONES[1]} />
-          <div className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3">
-            <MapPin size={16} className="text-violet-400 shrink-0" />
-            <div>
-              <span className="block text-xs text-zinc-500">Location</span>
-              <span className="block text-sm text-zinc-200">Matara, Sri Lanka</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  FOOTER                                                             */
-/* ------------------------------------------------------------------ */
-
-function Footer() {
-  return (
-    <footer className="border-t border-zinc-900 py-8 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} Yushan Sadeepa. All rights reserved.</p>
-        <div className="flex items-center gap-3">
-          {SOCIALS.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={s.label}
-              className="w-9 h-9 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:border-zinc-600 transition-colors"
-            >
-              <s.icon size={16} />
-            </a>
-          ))}
-          <a
-            href={`mailto:${EMAIL}`}
-            aria-label="Email"
-            className="w-9 h-9 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-100 hover:border-zinc-600 transition-colors"
-          >
-            <Mail size={16} />
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  ROOT                                                               */
-/* ------------------------------------------------------------------ */
-
-export default function App() {
-  return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-violet-500/30">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-violet-500/30 selection:text-violet-200">
       <Navbar />
+
       <main>
         <Hero />
         <About />
         <Education />
         <Skills />
         <Projects />
-        <Contact />
+
+        <section id="contact" className="py-24 px-6 max-w-6xl mx-auto">
+          <SectionHeading
+            eyebrow="Contact"
+            title="Get in touch"
+            description="Feel free to reach out for collaboration, opportunities, or just a chat."
+          />
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <GlowCard className="p-8 flex flex-col justify-between space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-zinc-50 mb-2">Direct Contact Details</h3>
+                <p className="text-sm text-zinc-400 mb-6">
+                  Click on any field below to copy the contact details directly to your clipboard.
+                </p>
+                <div className="space-y-3">
+                  <CopyRow icon={Mail} label="Email Address" value={EMAIL} copyValue={EMAIL} />
+                  {PHONES.map((phone, idx) => (
+                    <CopyRow key={idx} icon={Phone} label={`Phone ${idx + 1}`} value={phone} copyValue={phone} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-zinc-800/80 pt-6">
+                <p className="text-xs text-zinc-500">Location</p>
+                <p className="text-sm text-zinc-300 font-medium mt-1">Western Province, Sri Lanka</p>
+              </div>
+            </GlowCard>
+
+            <GlowCard className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-xs font-medium text-zinc-400 mb-1">
+                    Your Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    required
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="John Doe"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800 text-sm text-zinc-100 focus:outline-none focus:border-violet-500/60 transition-colors placeholder:text-zinc-600"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-xs font-medium text-zinc-400 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="john@example.com"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800 text-sm text-zinc-100 focus:outline-none focus:border-violet-500/60 transition-colors placeholder:text-zinc-600"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs font-medium text-zinc-400 mb-1">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    required
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="Hello Yushan, I'd like to talk about..."
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800 text-sm text-zinc-100 focus:outline-none focus:border-violet-500/60 transition-colors placeholder:text-zinc-600 resize-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-medium text-sm flex items-center justify-center gap-2 hover:from-indigo-400 hover:to-violet-400 disabled:opacity-50 transition-colors"
+                >
+                  {status === "sending" ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={16} />
+                      Send Message
+                    </>
+                  )}
+                </button>
+
+                {statusMessage && (
+                  <div
+                    className={
+                      "p-3 rounded-xl text-xs flex items-center gap-2 " +
+                      (status === "success"
+                        ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                        : "bg-rose-500/10 border border-rose-500/20 text-rose-400")
+                    }
+                  >
+                    {status === "error" && <AlertCircle size={14} className="shrink-0" />}
+                    {statusMessage}
+                  </div>
+                )}
+              </form>
+            </GlowCard>
+          </div>
+        </section>
       </main>
-      <Footer />
+
+      <footer className="border-t border-zinc-800/80 py-8 px-6 text-center text-xs text-zinc-500">
+        <p>&copy; {new Date().getFullYear()} Yushan Sadeepa. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
