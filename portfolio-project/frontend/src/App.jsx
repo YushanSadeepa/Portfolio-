@@ -89,6 +89,7 @@ const PROJECTS = [
     size: "lg",
     cover: "/projects/cinnaxchange-cover.png",
     demo: { type: "video", src: "/projects/cinnaxchange-demo.mp4" },
+    githubUrl: "https://github.com/YushanSadeepa/Cinnamon-Trading-Platform---cinnaXchange.git",
   },
   {
     id: "susl-connect",
@@ -100,8 +101,9 @@ const PROJECTS = [
     tech: ["HTML", "PHP", "MySQL", "CSS", "JavaScript"],
     highlights: ["Local vendor management", "Student-tailored ordering system"],
     size: "md",
-    cover: "/projects/susl-connect-cover.jpg",
-    demo: { type: "gif", src: "/projects/susl-connect-demo.gif" },
+    cover: "/projects/susl-connect-cover.png",
+    demo: { type: "video", src: "/projects/susl-connect-demo.mp4" },
+    githubUrl: "https://github.com/YushanSadeepa/susl-connect-food.git",
   },
   {
     id: "budget-manager",
@@ -113,8 +115,9 @@ const PROJECTS = [
     tech: ["C#", ".NET", "SQL Server"],
     highlights: ["Expense tracking & categorization", "Visual financial reports"],
     size: "md",
-    cover: "/projects/budget-manager-cover.jpg",
+    cover: "/projects/budget-manager-cover.png",
     demo: { type: "video", src: "/projects/budget-manager-demo.mp4" },
+    githubUrl: "https://github.com/YushanSadeepa/Spendo.git",
   },
 ];
 
@@ -907,8 +910,25 @@ function ProjectCard({ project, onOpenDemo }) {
       </div>
 
       <div className="p-7 flex flex-col flex-1">
-        <h3 className="text-xl font-semibold text-zinc-50">{project.title}</h3>
-        <p className="text-sm text-zinc-500 mt-1">{project.subtitle}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-xl font-semibold text-zinc-50">{project.title}</h3>
+            <p className="text-sm text-zinc-500 mt-1">{project.subtitle}</p>
+          </div>
+
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View ${project.title} on GitHub`}
+              title="View source on GitHub"
+              className="shrink-0 w-9 h-9 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:border-violet-500/50 hover:bg-zinc-800/50 transition-colors"
+            >
+              <Github size={16} />
+            </a>
+          )}
+        </div>
 
         <p className="mt-4 text-sm text-zinc-400 leading-relaxed">{project.description}</p>
 
