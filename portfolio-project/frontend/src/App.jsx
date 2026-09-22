@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Github,
   Linkedin,
@@ -87,7 +87,7 @@ const PROJECTS = [
     tech: ["React", "Node.js", "MongoDB", "Socket.io"],
     highlights: ["Real-time bidding over WebSockets", "Direct buyer-seller connection"],
     size: "lg",
-    cover: "/projects/cinnaxchange-cover.jpg",
+    cover: "/projects/cinnaxchange-cover.png",
     demo: { type: "video", src: "/projects/cinnaxchange-demo.mp4" },
   },
   {
@@ -232,6 +232,232 @@ function GlowCard({ children, className = "", delay = 0 }) {
     >
       {children}
     </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* PARTICLE NETWORK (interactive canvas background)                   */
+/* ------------------------------------------------------------------ */
+
+function ParticleNetwork() {
+  const canvasRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  // Mutable refs, not state — this avoids any React re-render on every
+  // mouse move or animation frame, which is what keeps this smooth.
+  const mouseRef = useRef({ x: null, y: null });
+  const particlesRef = useRef([]);
+  const rafRef = useRef(null);
+  const sizeRef = useRef({ width: 0, height: 0, dpr: 1 });
+
+  const createParticles = useCallback((width, height) => {
+    // Density-based count so it looks right on a phone and a 4K monitor
+    // alike, clamped so it never gets heavy on very large screens.
+    const area = width * height;
+    const count = Math.min(90, Math.max(28, Math.round(area / 16000)));
+    return Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.4 + 0.8,
+    }));
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      sizeRef.current = { width, height, dpr };
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      particlesRef.current = createParticles(width, height);
+    };
+
+    resize();
+
+    // If the visitor prefers reduced motion, draw one static frame and stop —
+    // no animation loop, no mouse tracking, no continuous canvas repaint.
+    if (shouldReduceMotion) {
+      const { width, height } = sizeRef.current;
+      ctx.clearRect(0, 0, width, height);
+      particlesRef.current.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(161,161,170,0.5)";
+        ctx.fill();
+      });
+      window.addEventListener("resize", resize);
+      return () => window.removeEventListener("resize", resize);
+    }
+
+    const CONNECT_DIST = 130;
+    const CONNECT_DIST_SQ = CONNECT_DIST * CONNECT_DIST;
+    const MOUSE_DIST = 160;
+    const MOUSE_DIST_SQ = MOUSE_DIST * MOUSE_DIST;
+
+    const onMouseMove = (e) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+    const onMouseLeave = () => {
+      mouseRef.current = { x: null, y: null };
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("resize", resize);
+
+    let visible = !document.hidden;
+    const onVisibility = () => {
+      visible = !document.hidden;
+      if (visible) rafRef.current = requestAnimationFrame(tick);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    function tick() {
+      if (!visible) return;
+      const { width, height } = sizeRef.current;
+      const particles = particlesRef.current;
+      const mouse = mouseRef.current;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Move + bounce off edges
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x <= 0 || p.x >= width) p.vx *= -1;
+        if (p.y <= 0 || p.y >= height) p.vy *= -1;
+      }
+
+      // Particle-to-particle connecting lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < CONNECT_DIST_SQ) {
+            const alpha = 1 - Math.sqrt(distSq) / CONNECT_DIST;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(148,163,184,${alpha * 0.28})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Mouse-to-particle "grab" lines, in the site's violet/cyan accent
+      if (mouse.x !== null) {
+        for (const p of particles) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < MOUSE_DIST_SQ) {
+            const alpha = 1 - Math.sqrt(distSq) / MOUSE_DIST;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(167,139,250,${alpha * 0.55})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Particle dots, drawn last so they sit on top of the lines
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(203,213,225,0.55)";
+        ctx.fill();
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    }
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [shouldReduceMotion, createParticles]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 opacity-70"
+      aria-hidden="true"
+    />
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ANIMATED BACKGROUND                                                 */
+/* ------------------------------------------------------------------ */
+
+function AnimatedBackground() {
+  const shouldReduceMotion = useReducedMotion();
+
+  const blobs = [
+    {
+      className: "w-[560px] h-[560px] bg-indigo-600/25 blur-[120px]",
+      style: { top: "-12%", left: "-10%" },
+      animate: { x: [0, 90, -40, 0], y: [0, 70, -30, 0], scale: [1, 1.15, 0.95, 1] },
+      duration: 26,
+      delay: 0,
+    },
+    {
+      className: "w-[620px] h-[620px] bg-violet-600/20 blur-[130px]",
+      style: { top: "28%", right: "-14%" },
+      animate: { x: [0, -70, 45, 0], y: [0, -55, 35, 0], scale: [1, 0.9, 1.12, 1] },
+      duration: 30,
+      delay: 2,
+    },
+    {
+      className: "w-[480px] h-[480px] bg-cyan-500/20 blur-[110px]",
+      style: { bottom: "-14%", left: "22%" },
+      animate: { x: [0, 55, -65, 0], y: [0, -45, 55, 0], scale: [1, 1.1, 0.92, 1] },
+      duration: 28,
+      delay: 4,
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      {/* Interactive particle network — replaces the old static grid texture */}
+      <ParticleNetwork />
+
+      {/* Drifting aurora-style gradient blobs */}
+      {blobs.map((b, i) => (
+        <motion.div
+          key={i}
+          className={"absolute rounded-full " + b.className}
+          style={b.style}
+          animate={shouldReduceMotion ? undefined : b.animate}
+          transition={
+            shouldReduceMotion
+              ? undefined
+              : { duration: b.duration, repeat: Infinity, ease: "easeInOut", delay: b.delay }
+          }
+        />
+      ))}
+
+      {/* Vignette so text stays readable over the brightest blob overlaps */}
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/30 via-transparent to-zinc-950/50" />
+    </div>
   );
 }
 
@@ -490,6 +716,8 @@ function About() {
 /* ------------------------------------------------------------------ */
 
 function Education() {
+  const [logoError, setLogoError] = useState(false);
+
   return (
     <section id="education" className="py-24 px-6 max-w-6xl mx-auto">
       <SectionHeading
@@ -500,9 +728,18 @@ function Education() {
       <div className="grid md:grid-cols-3 gap-5">
         <GlowCard className="md:col-span-2 p-8">
           <div className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-zinc-700/60 flex items-center justify-center shrink-0">
-              <GraduationCap className="text-cyan-300" size={20} />
-            </div>
+            {!logoError ? (
+              <img
+                src="/university-logo.png"
+                alt="Sabaragamuwa University of Sri Lanka logo"
+                onError={() => setLogoError(true)}
+                className="w-11 h-11 rounded-xl object-contain bg-white/5 border border-zinc-700/60 p-1.5 shrink-0"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-zinc-700/60 flex items-center justify-center shrink-0">
+                <GraduationCap className="text-cyan-300" size={20} />
+              </div>
+            )}
             <div>
               <p className="text-zinc-100 font-semibold text-lg">
                 Bachelor of Science (Hons) in Computer Science and Technology
@@ -899,7 +1136,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-violet-500/30 selection:text-violet-200">
-      <Navbar />
+      <AnimatedBackground />
+
+      <div className="relative z-10">
+        <Navbar />
 
       <main>
         <Hero />
@@ -1023,6 +1263,7 @@ export default function App() {
       <footer className="border-t border-zinc-800/80 py-8 px-6 text-center text-xs text-zinc-500">
         <p>&copy; {new Date().getFullYear()} Yushan Sadeepa. All rights reserved.</p>
       </footer>
+      </div>
     </div>
   );
 }
