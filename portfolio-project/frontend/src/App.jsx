@@ -30,6 +30,8 @@ import {
   Target,
   MessageCircle,
   BarChart3,
+  Briefcase,
+  Building,
 } from "lucide-react";
 import {
   SiReact,
@@ -66,14 +68,15 @@ const API_URL = "http://localhost:5000/api/contact";
 const NAV_LINKS = [
   { id: "about", label: "About" },
   { id: "education", label: "Education" },
+  { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "contact", label: "Contact" },
 ];
 
 const SOCIALS = [
-  { label: "GitHub", icon: Github, href: "https://github.com/" },
-  { label: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/" },
+  { label: "GitHub", icon: Github, href: "https://github.com/YushanSadeepa" },
+  { label: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/yushan-sadeepa" },
 ];
 
 const PROJECTS = [
@@ -190,6 +193,17 @@ const COURSEWORK = [
   "Statistics for Experimental Analysis",
   "Computer Architecture",
   "Programming",
+];
+
+const EXPERIENCE = [
+  {
+    id: "boc-internship",
+    role: "Internship Trainee",
+    company: "Bank of Ceylon",
+    duration: "Jun 2022 \u2013 Jan 2023",
+    location: "Matara, Southern Province, Sri Lanka",
+    logo: "/boc-logo.png",
+  },
 ];
 
 const EMAIL = "yushanaththanayake@gmail.com";
@@ -670,7 +684,7 @@ function Hero() {
           >
             <MapPin className="text-violet-400 mb-3" size={22} />
             <p className="text-sm text-zinc-500 mb-1">Based in</p>
-            <p className="text-zinc-100 font-medium">Western Province, Sri Lanka</p>
+            <p className="text-zinc-100 font-medium">Matara, Southern Province, Sri Lanka</p>
           </motion.div>
         </div>
       </div>
@@ -685,7 +699,7 @@ function Hero() {
 function About() {
   const stats = [
     { label: "Focus areas", value: "ML, Data & SWE" },
-    { label: "Degree progress", value: "Year 3, ongoing" },
+    { label: "Degree progress", value: "Year 4, ongoing" },
     { label: "Home base", value: "Sri Lanka" },
   ];
 
@@ -769,6 +783,67 @@ function Education() {
             ))}
           </ul>
         </GlowCard>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  EXPERIENCE                                                         */
+/* ------------------------------------------------------------------ */
+
+function ExperienceCard({ entry, delay = 0 }) {
+  const [logoError, setLogoError] = useState(false);
+
+  return (
+    <GlowCard delay={delay} className="p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="flex items-start gap-4 flex-1">
+          {!logoError ? (
+            <img
+              src={entry.logo}
+              alt={`${entry.company} logo`}
+              onError={() => setLogoError(true)}
+              className="w-11 h-11 rounded-xl object-contain bg-white/5 border border-zinc-700/60 p-1.5 shrink-0"
+            />
+          ) : (
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-zinc-700/60 flex items-center justify-center shrink-0">
+              <Briefcase className="text-cyan-300" size={20} />
+            </div>
+          )}
+          <div>
+            <p className="text-zinc-100 font-semibold text-lg">{entry.role}</p>
+            <p className="text-sm text-violet-300/90 mt-1 flex items-center gap-1.5">
+              <Building size={13} className="shrink-0" />
+              {entry.company}
+            </p>
+          </div>
+        </div>
+
+        <div className="sm:text-right shrink-0 pl-0 sm:pl-4">
+          <p className="text-sm text-zinc-300">{entry.duration}</p>
+          <p className="text-sm text-zinc-500 mt-1 flex items-center gap-1.5 sm:justify-end">
+            <MapPin size={13} className="shrink-0" />
+            {entry.location}
+          </p>
+        </div>
+      </div>
+    </GlowCard>
+  );
+}
+
+function Experience() {
+  return (
+    <section id="experience" className="py-24 px-6 max-w-6xl mx-auto">
+      <SectionHeading
+        eyebrow="Experience"
+        title="Where I've worked"
+        description="Hands-on exposure to a professional environment alongside my studies."
+      />
+      <div className="space-y-5">
+        {EXPERIENCE.map((entry, i) => (
+          <ExperienceCard key={entry.id} entry={entry} delay={i * 0.1} />
+        ))}
       </div>
     </section>
   );
@@ -1165,6 +1240,7 @@ export default function App() {
         <Hero />
         <About />
         <Education />
+        <Experience />
         <Skills />
         <Projects />
 
@@ -1192,7 +1268,7 @@ export default function App() {
 
               <div className="border-t border-zinc-800/80 pt-6">
                 <p className="text-xs text-zinc-500">Location</p>
-                <p className="text-sm text-zinc-300 font-medium mt-1">Western Province, Sri Lanka</p>
+                <p className="text-sm text-zinc-300 font-medium mt-1">Southern Province, Sri Lanka</p>
               </div>
             </GlowCard>
 
