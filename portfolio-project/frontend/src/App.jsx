@@ -10,6 +10,7 @@ import {
   Copy,
   Check,
   GraduationCap,
+  School,
   Code2,
   Brain,
   Server,
@@ -195,6 +196,29 @@ const COURSEWORK = [
   "Programming",
 ];
 
+const EDUCATION = [
+  {
+    id: "sabaragamuwa-university",
+    degree: "Bachelor of Science (Hons) in Computer Science and Technology",
+    note: "Special Degree",
+    institution: "Sabaragamuwa University of Sri Lanka",
+    duration: "2023 \u2013 Present",
+    logo: "/university-logo.png",
+    fallbackIcon: GraduationCap,
+  },
+  {
+    id: "matara-central-college",
+    degree: "Physical Science / Mathematical Stream (A/L)",
+    note: null,
+    institution: "Matara Central College",
+    duration: "2011 \u2013 2019",
+    logo: null,
+    logo:"/school-logo.png",
+    fallbackIcon: School,
+    
+  },
+];
+
 const EXPERIENCE = [
   {
     id: "boc-internship",
@@ -214,8 +238,14 @@ const PHONES = ["+94 76 772 5450", "+94 70 155 4291"];
 /* ------------------------------------------------------------------ */
 
 function scrollToId(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Deferring to the next animation frame ensures this runs after any
+  // pending layout change — important right after closing an overlay
+  // like the mobile menu, where scrolling immediately could be measured
+  // against a layout that's still mid-transition.
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function SectionHeading({ eyebrow, title, description }) {
@@ -499,7 +529,7 @@ function Navbar() {
         (scrolled ? "bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/80" : "bg-transparent border-b border-transparent")
       }
     >
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <button onClick={() => scrollToId("hero")} className="text-sm font-semibold tracking-tight text-zinc-100">
           Yushan<span className="text-violet-400">.</span>Sadeepa
         </button>
@@ -539,13 +569,13 @@ function Navbar() {
             transition={{ duration: 0.25 }}
             className="md:hidden overflow-hidden bg-zinc-950/95 border-b border-zinc-800/80"
           >
-            <div className="px-6 py-4 flex flex-col gap-4">
+            <div className="px-4 sm:px-6 py-4 flex flex-col gap-4">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => {
-                    scrollToId(link.id);
                     setOpen(false);
+                    scrollToId(link.id);
                   }}
                   className="text-left text-sm text-zinc-300"
                 >
@@ -554,8 +584,8 @@ function Navbar() {
               ))}
               <button
                 onClick={() => {
-                  scrollToId("contact");
                   setOpen(false);
+                  scrollToId("contact");
                 }}
                 className="text-sm font-medium px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white w-fit"
               >
@@ -577,7 +607,7 @@ function Hero() {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <section id="hero" className="relative pt-32 pb-20 px-6 max-w-6xl mx-auto min-h-screen flex items-center">
+    <section id="hero" className="relative pt-28 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 max-w-6xl mx-auto min-h-screen flex items-center">
       <div className="absolute top-24 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-br from-indigo-600/20 via-violet-600/10 to-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="relative grid md:grid-cols-3 gap-5 w-full">
@@ -585,11 +615,11 @@ function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="md:col-span-2 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm p-8 sm:p-10 flex flex-col justify-center"
+          className="md:col-span-2 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm p-6 sm:p-10 flex flex-col justify-center"
         >
-          <div className="inline-flex items-center gap-2 text-xs font-medium text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1 w-fit mb-6">
-            <Sparkles size={14} />
-            Open to Software Engineering & Data roles
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1 max-w-full mb-6">
+            <Sparkles size={14} className="shrink-0" />
+            <span>Open to Software Engineering & Data roles</span>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
@@ -598,7 +628,7 @@ function Hero() {
               <div className="relative w-full h-full rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400">
                 {!imgError ? (
                   <img
-                    src="/profile.jpg"
+                    src="/profile.png"
                     alt="Yushan Sadeepa"
                     onError={() => setImgError(true)}
                     className="w-full h-full rounded-full object-cover bg-zinc-900"
@@ -704,10 +734,10 @@ function About() {
   ];
 
   return (
-    <section id="about" className="py-24 px-6 max-w-6xl mx-auto">
+    <section id="about" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
       <SectionHeading eyebrow="About" title="Who I am" />
       <div className="grid md:grid-cols-3 gap-5">
-        <GlowCard className="md:col-span-2 p-8">
+        <GlowCard className="md:col-span-2 p-6 sm:p-8">
           <p className="text-lg text-zinc-300 leading-relaxed">
             Computer Science and Technology undergraduate at{" "}
             <span className="text-zinc-100 font-medium">Sabaragamuwa University of Sri Lanka</span> specializing in
@@ -732,44 +762,53 @@ function About() {
 /* EDUCATION                                                          */
 /* ------------------------------------------------------------------ */
 
-function Education() {
+function EducationCard({ edu, delay = 0 }) {
   const [logoError, setLogoError] = useState(false);
+  const FallbackIcon = edu.fallbackIcon;
 
   return (
-    <section id="education" className="py-24 px-6 max-w-6xl mx-auto">
+    <GlowCard delay={delay} className="p-6 sm:p-8">
+      <div className="flex items-start gap-4">
+        {edu.logo && !logoError ? (
+          <img
+            src={edu.logo}
+            alt={`${edu.institution} logo`}
+            onError={() => setLogoError(true)}
+            className="w-11 h-11 rounded-xl object-contain bg-white/5 border border-zinc-700/60 p-1.5 shrink-0"
+          />
+        ) : (
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-zinc-700/60 flex items-center justify-center shrink-0">
+            <FallbackIcon className="text-cyan-300" size={20} />
+          </div>
+        )}
+        <div>
+          <p className="text-zinc-100 font-semibold text-lg">{edu.degree}</p>
+          {edu.note && <p className="text-sm text-violet-300/90 mt-1">{edu.note}</p>}
+          <p className="text-sm text-zinc-500 mt-2">
+            {edu.institution} &nbsp;&bull;&nbsp; {edu.duration}
+          </p>
+        </div>
+      </div>
+    </GlowCard>
+  );
+}
+
+function Education() {
+  return (
+    <section id="education" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
       <SectionHeading
         eyebrow="Education"
         title="Academic background"
         description="Formal study alongside hands-on coursework in machine learning and systems fundamentals."
       />
       <div className="grid md:grid-cols-3 gap-5">
-        <GlowCard className="md:col-span-2 p-8">
-          <div className="flex items-start gap-4">
-            {!logoError ? (
-              <img
-                src="/university-logo.png"
-                alt="Sabaragamuwa University of Sri Lanka logo"
-                onError={() => setLogoError(true)}
-                className="w-11 h-11 rounded-xl object-contain bg-white/5 border border-zinc-700/60 p-1.5 shrink-0"
-              />
-            ) : (
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 border border-zinc-700/60 flex items-center justify-center shrink-0">
-                <GraduationCap className="text-cyan-300" size={20} />
-              </div>
-            )}
-            <div>
-              <p className="text-zinc-100 font-semibold text-lg">
-                Bachelor of Science (Hons) in Computer Science and Technology
-              </p>
-              <p className="text-sm text-violet-300/90 mt-1">Special Degree</p>
-              <p className="text-sm text-zinc-500 mt-2">
-                Sabaragamuwa University of Sri Lanka &nbsp;&bull;&nbsp; 2023 &ndash; Present
-              </p>
-            </div>
-          </div>
-        </GlowCard>
+        <div className="md:col-span-2 flex flex-col gap-5">
+          {EDUCATION.map((edu, i) => (
+            <EducationCard key={edu.id} edu={edu} delay={i * 0.08} />
+          ))}
+        </div>
 
-        <GlowCard delay={0.1} className="p-8">
+        <GlowCard delay={0.16} className="p-6 sm:p-8">
           <div className="flex items-center gap-2 mb-4 text-zinc-100 font-medium">
             <BookOpen size={18} className="text-violet-400" />
             Relevant Coursework
@@ -796,7 +835,7 @@ function ExperienceCard({ entry, delay = 0 }) {
   const [logoError, setLogoError] = useState(false);
 
   return (
-    <GlowCard delay={delay} className="p-8">
+    <GlowCard delay={delay} className="p-6 sm:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center gap-5">
         <div className="flex items-start gap-4 flex-1">
           {!logoError ? (
@@ -834,7 +873,7 @@ function ExperienceCard({ entry, delay = 0 }) {
 
 function Experience() {
   return (
-    <section id="experience" className="py-24 px-6 max-w-6xl mx-auto">
+    <section id="experience" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
       <SectionHeading
         eyebrow="Experience"
         title="Where I've worked"
@@ -857,7 +896,7 @@ function SkillChip({ label }) {
   const entry = SKILL_ICON_MAP[label];
   const Icon = entry?.icon;
   return (
-    <span className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-950/60 text-zinc-300 hover:border-violet-500/40 hover:text-zinc-100 transition-colors">
+    <span className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-950/60 text-zinc-300 hover:border-violet-500/40 hover:text-zinc-100 transition-colors max-w-full break-words">
       {Icon ? (
         <Icon
           size={16}
@@ -875,7 +914,7 @@ function Skills() {
   const current = SKILL_CATEGORIES.find((c) => c.id === active) || SKILL_CATEGORIES[0];
 
   return (
-    <section id="skills" className="py-24 px-6 max-w-6xl mx-auto">
+    <section id="skills" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
       <SectionHeading eyebrow="Skills" title="What I work with" />
 
       <div className="flex flex-wrap gap-2 mb-6">
@@ -906,7 +945,7 @@ function Skills() {
         })}
       </div>
 
-      <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm p-8 min-h-[180px]">
+      <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 backdrop-blur-sm p-5 sm:p-8 min-h-[180px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -984,10 +1023,10 @@ function ProjectCard({ project, onOpenDemo }) {
         )}
       </div>
 
-      <div className="p-7 flex flex-col flex-1">
+      <div className="p-5 sm:p-7 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-xl font-semibold text-zinc-50">{project.title}</h3>
+          <div className="min-w-0">
+            <h3 className="text-xl font-semibold text-zinc-50 break-words">{project.title}</h3>
             <p className="text-sm text-zinc-500 mt-1">{project.subtitle}</p>
           </div>
 
@@ -1061,15 +1100,15 @@ function DemoModal({ project, onClose }) {
             onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
-              <h4 className="text-sm font-medium text-zinc-200 flex items-center gap-2">
-                <Maximize2 size={14} className="text-violet-400" />
-                {project.title} &mdash; Demo
+            <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 sm:py-4 border-b border-zinc-800">
+              <h4 className="min-w-0 text-sm font-medium text-zinc-200 flex items-center gap-2">
+                <Maximize2 size={14} className="text-violet-400 shrink-0" />
+                <span className="truncate">{project.title} &mdash; Demo</span>
               </h4>
               <button
                 onClick={onClose}
                 aria-label="Close demo"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+                className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
               >
                 <X size={16} />
               </button>
@@ -1112,7 +1151,7 @@ function Projects() {
   const visible = filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
 
   return (
-    <section id="projects" className="py-24 px-6 max-w-6xl mx-auto">
+    <section id="projects" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
       <SectionHeading
         eyebrow="Projects"
         title="Featured work"
@@ -1230,7 +1269,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-violet-500/30 selection:text-violet-200">
+    <div className="min-h-screen overflow-x-hidden bg-zinc-950 text-zinc-100 font-sans selection:bg-violet-500/30 selection:text-violet-200">
       <AnimatedBackground />
 
       <div className="relative z-10">
@@ -1244,7 +1283,7 @@ export default function App() {
         <Skills />
         <Projects />
 
-        <section id="contact" className="py-24 px-6 max-w-6xl mx-auto">
+        <section id="contact" className="scroll-mt-20 py-16 sm:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
           <SectionHeading
             eyebrow="Contact"
             title="Get in touch"
@@ -1252,7 +1291,7 @@ export default function App() {
           />
 
           <div className="grid md:grid-cols-2 gap-8">
-            <GlowCard className="p-8 flex flex-col justify-between space-y-6">
+            <GlowCard className="p-6 sm:p-8 flex flex-col justify-between space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-zinc-50 mb-2">Direct Contact Details</h3>
                 <p className="text-sm text-zinc-400 mb-6">
@@ -1272,7 +1311,7 @@ export default function App() {
               </div>
             </GlowCard>
 
-            <GlowCard className="p-8">
+            <GlowCard className="p-6 sm:p-8">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-xs font-medium text-zinc-400 mb-1">
@@ -1356,7 +1395,7 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="border-t border-zinc-800/80 py-8 px-6 text-center text-xs text-zinc-500">
+      <footer className="border-t border-zinc-800/80 py-8 px-4 sm:px-6 text-center text-xs text-zinc-500">
         <p>&copy; {new Date().getFullYear()} Yushan Sadeepa. All rights reserved.</p>
       </footer>
       </div>
