@@ -212,10 +212,8 @@ const EDUCATION = [
     note: null,
     institution: "Matara Central College",
     duration: "2011 \u2013 2019",
-    logo: null,
-    logo:"/school-logo.png",
+    logo: "/school-logo.png",
     fallbackIcon: School,
-    
   },
 ];
 
@@ -625,16 +623,16 @@ function Hero() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
             <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0">
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 blur-md opacity-40" />
-              <div className="relative w-full h-full rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400">
+              <div className="relative w-full h-full rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 overflow-hidden">
                 {!imgError ? (
                   <img
                     src="/profile.png"
                     alt="Yushan Sadeepa"
                     onError={() => setImgError(true)}
-                    className="w-full h-full rounded-full object-cover bg-zinc-900"
+                    className="w-full h-full rounded-full object-cover bg-zinc-900 transition-transform duration-300 ease-in-out hover:scale-110"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-2xl font-semibold text-zinc-300">
+                  <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center text-2xl font-semibold text-zinc-300 transition-transform duration-300 ease-in-out hover:scale-110">
                     YS
                   </div>
                 )}
